@@ -5,10 +5,10 @@ import { HiArrowRight, HiCheck } from 'react-icons/hi';
 const VideoSection = () => {
     return (
         <div className="w-full py-24 md:py-32">
-            {/* Main container with video and text */}
+
             <div className="w-full border border-blue-300 rounded-lg overflow-hidden">
                 <div className="flex flex-col md:flex-row">
-                    {/* Video/Image Section (Left) */}
+
                     <div className="w-full md:w-1/2 relative h-[400px] md:h-auto">
                         <div
                             className="absolute inset-0 bg-cover bg-center"
@@ -21,7 +21,7 @@ const VideoSection = () => {
                         </div>
                     </div>
 
-                    {/* Content Section (Right) */}
+
                     <div className="w-full md:w-1/2 bg-[#F5F7FF] p-8 md:p-12 flex flex-col justify-center">
                         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-6">
                             Get A Fair Price For Your Car<br />Sell To Us Today
@@ -60,7 +60,7 @@ const VideoSection = () => {
                 </div>
             </div>
 
-            {/* Statistics Bar */}
+
             <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                 <div className="p-4">
                     <p className="text-3xl md:text-4xl font-bold text-gray-900">836M</p>

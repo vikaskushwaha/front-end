@@ -9,7 +9,6 @@ const WhyChooseUs = () => {
 
 
 
-            {/* Heading */}
             <div className="px-4 sm:px-6">
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 py-4">
                     Why Choose Us?
@@ -18,9 +17,9 @@ const WhyChooseUs = () => {
 
 
 
-            {/* Feature cards */}
+
             <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-4 sm:px-6">
-                {/* Special Financing Offers */}
+
                 <div className="flex flex-col items-center text-center">
                     <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 mb-4">
                         <MdLocalOffer size={28} />
@@ -31,7 +30,7 @@ const WhyChooseUs = () => {
                     </p>
                 </div>
 
-                {/* Trusted Car Dealership */}
+
                 <div className="flex flex-col items-center text-center">
                     <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 mb-4">
                         <GiDiamondHard size={28} />
@@ -42,7 +41,7 @@ const WhyChooseUs = () => {
                     </p>
                 </div>
 
-                {/* Transparent Pricing */}
+
                 <div className="flex flex-col items-center text-center">
                     <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 mb-4">
                         <FaTag size={24} />
@@ -53,7 +52,7 @@ const WhyChooseUs = () => {
                     </p>
                 </div>
 
-                {/* Expert Car Service */}
+
                 <div className="flex flex-col items-center text-center">
                     <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 mb-4">
                         <FaCar size={28} />

@@ -3,16 +3,12 @@
 import axios from 'axios';
 
 
-export async function searchVehicles(make, model, priceRange) {
+export async function searchVehicles(make, model, priceRange, condition = '', vehicleType = '') {
     try {
         let minPrice = '0';
         let maxPrice = '1000000';
-
         if (priceRange) {
-
             const standardRangeMatch = priceRange.match(/\$([0-9,]+)-\$([0-9,]+)/);
-
-
             const plusRangeMatch = priceRange.match(/\$([0-9,]+)\+/);
 
             if (standardRangeMatch) {
@@ -28,10 +24,28 @@ export async function searchVehicles(make, model, priceRange) {
                 console.warn(`Unrecognized price range format: ${priceRange}`);
             }
         }
-        console.log(`Searching with price range: $${minPrice} to $${maxPrice}`);
+        // Build the query URL
+        let url = `http://localhost:8080/api/v1/vehicle?make=${make}&model=${model}&minPrice=${minPrice}&maxPrice=${maxPrice}`;
 
-        const response = await axios.get(`http://localhost:8080/api/v1/vehicle?make=${make}&model=${model}&minPrice=${minPrice}&maxPrice=${maxPrice}`);
-        console.log(response.data.data);
+        // Add condition if specified
+        if (condition) {
+            url += `&condition=${condition}`;
+        }
+
+        // Add vehicleType if specified
+
+        if (vehicleType) {
+            if (vehicleType == "Hybrid") {
+                url += `&fuelType=${vehicleType}`;
+            }
+            else {
+                url += `&vehicleType=${vehicleType}`;
+            }
+
+        }
+        console.log(`Searching with URL: ${url}`);
+        const response = await axios.get(url);
+
 
         return response.data?.data || [];
     } catch (error) {

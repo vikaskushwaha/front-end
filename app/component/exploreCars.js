@@ -11,6 +11,7 @@ const ExploreCars = () => {
     const scrollRef = useRef(null);
     const [activeTab, setActiveTab] = useState('in-stock');
     const { searchResults } = useSearch();
+    // console.log(searchResults, "***************");
 
     // Format all vehicles from search results
     const formatVehicles = (results) => {
@@ -90,7 +91,6 @@ const ExploreCars = () => {
                     View All <HiArrowRight className="ml-2" />
                 </button>
             </div>
-
 
             <div className="flex border-b border-gray-200 mb-6 overflow-x-auto hide-scrollbar">
                 {["in-stock", "new-cars", "used-cars"].map((tab) => (
@@ -176,7 +176,7 @@ const ExploreCars = () => {
                     )}
                 </div>
 
-                {/* Arrow Buttons */}
+
                 {displayCars.length > 3 && (
                     <>
                         <div className="absolute top-[50%] -translate-y-1/2 left-2 z-10">

@@ -52,7 +52,7 @@ const Testimony = () => {
     return (
         <div className="w-full py-16 px-6 sm:px-10 md:px-16 lg:px-20 bg-[#F9FBFC] mt-14">
             <div className="max-w-6xl mx-auto">
-                {/* Header section with title and rating summary */}
+
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 md:mb-0">
                         What our customers say
@@ -63,10 +63,10 @@ const Testimony = () => {
                     </p>
                 </div>
 
-                {/* Testimonial section */}
+
                 <div className="relative">
                     <div className="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12">
-                        {/* Image container */}
+
                         <div className="w-full md:w-2/5">
                             <div className="relative rounded-lg overflow-hidden aspect-[4/3]">
                                 <img
@@ -80,9 +80,9 @@ const Testimony = () => {
                             </div>
                         </div>
 
-                        {/* Content container */}
+
                         <div className="w-full md:w-3/5">
-                            {/* Rating */}
+
                             <div className="flex items-center mb-4">
                                 <div className="flex mr-2">
                                     {renderStars(currentTestimonial.rating)}
@@ -92,20 +92,20 @@ const Testimony = () => {
                                 </span>
                             </div>
 
-                            {/* Customer name and role */}
+
                             <h3 className="text-xl font-bold text-gray-900 mb-1">
                                 {currentTestimonial.name}
                             </h3>
                             <p className="text-gray-600 mb-6">{currentTestimonial.role}</p>
 
-                            {/* Testimonial text */}
+
                             <p className="text-xl leading-relaxed text-gray-800">
                                 {currentTestimonial.text}
                             </p>
                         </div>
                     </div>
 
-                    {/* Navigation buttons */}
+
                     <button
                         onClick={prevTestimonial}
                         className="absolute top-1/2 -left-4 transform -translate-y-1/2 bg-white shadow-md rounded-full p-2 focus:outline-none hover:bg-gray-100"

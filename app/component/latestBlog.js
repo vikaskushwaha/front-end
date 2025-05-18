@@ -1,11 +1,12 @@
 import React from 'react';
+import Image from 'next/image';
 import { HiArrowRight, HiArrowNarrowRight } from 'react-icons/hi';
 
 const LatestBlog = () => {
     const blogPosts = [
         {
             id: 1,
-            image: '/blog/bmw-alpina.jpg',
+            image: '/blog1.svg',
             category: 'Sound',
             author: 'Admin',
             date: 'November 22, 2023',
@@ -13,7 +14,7 @@ const LatestBlog = () => {
         },
         {
             id: 2,
-            image: '/blog/bmw-x6.jpg',
+            image: '/blog2.svg',
             category: 'Accessories',
             author: 'Admin',
             date: 'November 22, 2023',
@@ -21,7 +22,7 @@ const LatestBlog = () => {
         },
         {
             id: 3,
-            image: '/blog/bmw-x5.jpg',
+            image: '/background2.jpg',
             category: 'Exterior',
             author: 'Admin',
             date: 'November 22, 2023',
@@ -31,7 +32,6 @@ const LatestBlog = () => {
 
     return (
         <div className="w-full py-16 px-6 sm:px-8 lg:px-12">
-            {/* Blog section header */}
             <div className="max-w-7xl mx-auto">
                 <div className="flex justify-between items-center mb-10">
                     <h2 className="text-3xl font-bold text-gray-900">Latest Blog Posts</h2>
@@ -40,26 +40,28 @@ const LatestBlog = () => {
                     </a>
                 </div>
 
-                {/* Blog posts grid */}
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
                     {blogPosts.map(post => (
                         <div key={post.id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                            {/* Post image */}
+
                             <div className="relative">
-                                <img
+                                <Image
                                     src={post.image}
                                     alt={post.title}
+                                    width={600}
+                                    height={400}
                                     className="w-full h-48 object-cover"
-                                    onError={(e) => {
-                                        e.target.src = 'https://via.placeholder.com/600x400?text=Blog+Image';
-                                    }}
+                                    placeholder="blur"
+                                    blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'%3E%3Crect width='600' height='400' fill='%23f0f0f0'/%3E%3C/svg%3E"
+                                    onError={() => {/* error handled by Next.js */ }}
                                 />
                                 <span className="absolute top-4 left-4 bg-white text-gray-800 text-xs px-3 py-1 rounded-full">
                                     {post.category}
                                 </span>
                             </div>
 
-                            {/* Post content */}
+
                             <div className="p-5">
                                 <div className="flex text-gray-500 text-sm mb-2">
                                     <span>{post.author}</span>
@@ -77,9 +79,9 @@ const LatestBlog = () => {
                     ))}
                 </div>
 
-                {/* CTA sections */}
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Buy CTA */}
+
                     <div className="bg-blue-50 rounded-xl p-8">
                         <h3 className="text-2xl font-bold text-gray-900 mb-2">
                             Are You Looking<br />For a Car?
@@ -92,12 +94,12 @@ const LatestBlog = () => {
                                 Get Started <HiArrowNarrowRight className="ml-2" />
                             </button>
                             <div className="w-24 h-24 text-blue-400">
-                                {/* Your image/icon here */}
+
                             </div>
                         </div>
                     </div>
 
-                    {/* Sell CTA */}
+
                     <div className="bg-pink-50 rounded-xl p-8">
                         <h3 className="text-2xl font-bold text-gray-900 mb-2">
                             Do You Want to<br />Sell a Car?
@@ -110,7 +112,7 @@ const LatestBlog = () => {
                                 Get Started <HiArrowNarrowRight className="ml-2" />
                             </button>
                             <div className="w-24 h-24 text-pink-400">
-                                {/* Your image/icon here */}
+
                             </div>
                         </div>
                     </div>

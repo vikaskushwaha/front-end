@@ -11,8 +11,10 @@ import axios from 'axios';
 import { fetchCarMakes } from '../action/fetchanymake';
 import { fetchCarModels } from '../action/fetchmodelForSelectedMake';
 import { searchVehicles } from '../action/fetchSerachCar';
-
+import { useAuth } from '../context/authContext';
 import { useSearch } from '../context/SearchContext';
+import SigninModal from './signinModal';
+
 export const BDXCarsHeader = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [makes, setMakes] = useState([]);
@@ -21,8 +23,12 @@ export const BDXCarsHeader = () => {
     const [selectedModel, setSelectedModel] = useState('');
     const [selectedPrice, setSelectedPrice] = useState('');
     const [isSearching, setIsSearching] = useState(false);
+    const [isSigninModalOpen, setIsSigninModalOpen] = useState(false);
+    const { user, logout } = useAuth();
     // const [searchResults, setSearchResults] = useState([]);
     const [searchError, setSearchError] = useState(null);
+    const [activeTab, setActiveTab] = useState('All');
+    const [activeVehicleType, setActiveVehicleType] = useState('');
     const {
         setSearchResults,
     } = useSearch();
@@ -55,19 +61,23 @@ export const BDXCarsHeader = () => {
 
         try {
 
-            if (!selectedMake && !selectedModel && !selectedPrice) {
+            if (!selectedMake && !selectedModel && !selectedPrice && activeTab === 'All') {
                 console.log("Please select at least one search criteria");
                 setSearchError("Please select at least one search criteria");
                 return false; // Return false to indicate search didn't proceed
             }
 
-            console.log(`Searching for: Make: ${selectedMake || 'Any'}, Model: ${selectedModel || 'Any'}, Price: ${selectedPrice || 'Any'}`);
+            // Use the active tab as the condition (except for 'All')
+            const condition = activeTab === 'All' ? '' : activeTab;
+
+            console.log(`Searching for: Make: ${selectedMake || 'Any'}, Model: ${selectedModel || 'Any'}, Price: ${selectedPrice || 'Any'}, Condition: ${condition || 'Any'}`);
 
 
             const results = await searchVehicles(
                 selectedMake || '',
                 selectedModel || '',
-                selectedPrice || ''
+                selectedPrice || '',
+                condition
             );
 
             if (results.error) {
@@ -78,12 +88,12 @@ export const BDXCarsHeader = () => {
 
 
 
-            if (results.length === 0) {
+            if (!results.vehclesList || results.vehclesList.length === 0) {
                 console.log("No vehicles found matching your criteria");
                 setSearchError("No vehicles found matching your criteria");
                 return false;
             } else {
-                console.log(`Found ${results.length} vehicles matching your criteria`);
+                console.log(`Found ${results.vehclesList.length} vehicles matching your criteria`);
 
 
                 return true;
@@ -95,6 +105,98 @@ export const BDXCarsHeader = () => {
         } finally {
             setIsSearching(false);
         }
+    };
+
+    const handleTabFilter = async (tab) => {
+        setActiveTab(tab);
+        setSearchError(null);
+        setIsSearching(true);
+
+        try {
+            // Keep any existing make/model filters when changing condition
+            const condition = tab === 'All' ? '' : tab;
+
+            const results = await searchVehicles(
+                selectedMake || '',
+                selectedModel || '',
+                selectedPrice || '',
+                condition
+            );
+
+            if (results.error) {
+                throw new Error(results.error);
+            }
+
+            setSearchResults(results);
+
+            // Scroll to results section
+            setTimeout(() => {
+                const exploreElement = document.getElementById('explore-cars');
+                if (exploreElement) {
+                    exploreElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }, 100);
+
+        } catch (error) {
+            console.error("Filter failed:", error);
+            setSearchError(error.message || "Failed to filter vehicles");
+        } finally {
+            setIsSearching(false);
+        }
+    };
+
+    // Add this handler function for vehicle type filtering
+    const handleVehicleTypeFilter = async (vehicleType) => {
+        setActiveVehicleType(vehicleType);
+        setSearchError(null);
+        setIsSearching(true);
+
+        try {
+            // Reset other filters when filtering by vehicle type
+            setSelectedMake('');
+            setSelectedModel('');
+            setSelectedPrice('');
+            setActiveTab('All');
+
+            // Call the search function with the vehicle type
+            const results = await searchVehicles('', '', '', '', vehicleType);
+
+            if (results.error) {
+                throw new Error(results.error);
+            }
+
+            setSearchResults(results);
+
+            // Scroll to results section
+            setTimeout(() => {
+                const exploreElement = document.getElementById('explore-cars');
+                if (exploreElement) {
+                    exploreElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }, 100);
+
+        } catch (error) {
+            console.error("Vehicle type filter failed:", error);
+            setSearchError(error.message || "Failed to filter vehicles by type");
+        } finally {
+            setIsSearching(false);
+        }
+    };
+
+    // Add this function
+    const clearAllFilters = () => {
+        setSelectedMake('');
+        setSelectedModel('');
+        setSelectedPrice('');
+        setActiveTab('All');
+        setActiveVehicleType('');
+        setSearchResults(null); // Clear any search results
     };
 
     return (
@@ -121,16 +223,31 @@ export const BDXCarsHeader = () => {
                         <div className="cursor-pointer hover:text-gray-200 transition">Contact</div>
                     </div>
                     <div className="hidden sm:flex items-center space-x-4">
-                        <button className="text-white flex items-center hover:text-gray-200 transition">
-                            <BsFillPersonFill className="mr-1" /> Sign in
-                        </button>
+                        {user ? (
+                            <button
+                                className="text-white flex items-center hover:text-gray-200 transition"
+                                onClick={() => {
+                                    logout()
+                                    // Optional: redirect or show toast message
+                                }}
+                            >
+                                <BsFillPersonFill className="mr-1" /> Log out
+                            </button>
+                        ) : (
+                            <button
+                                className="text-white flex items-center hover:text-gray-200 transition"
+                                onClick={() => setIsSigninModalOpen(true)}  // Use the correct state setter
+                            >
+                                <BsFillPersonFill className="mr-1" /> Sign in
+                            </button>
+                        )}
                         <button className="bg-white text-gray-800 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-sm sm:text-base font-medium hover:bg-gray-100 transition">
                             Submit Listing
                         </button>
                     </div>
                 </div>
 
-                {/* Mobile Menu */}
+
                 {mobileMenuOpen && (
                     <div className="lg:hidden mt-4 bg-gray-900 bg-opacity-90 p-4 absolute left-0 right-0 z-50">
                         <div className="flex flex-col space-y-3 text-white">
@@ -152,29 +269,30 @@ export const BDXCarsHeader = () => {
                 )}
             </div>
 
-            {/* Hero Section */}
+
             <div className="flex flex-col items-center justify-center text-center text-white mt-12 sm:mt-16 md:mt-20 px-4">
                 <p className="text-sm md:text-base">Find cars for sale and for rent near you</p>
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mt-3 mb-6 sm:mb-8">
                     Find Your Perfect Car
                 </h1>
 
-                {/* Filter Tabs */}
+
                 <div className="flex space-x-6 sm:space-x-8 mb-6 overflow-x-auto pb-2 w-full justify-center">
                     {['All', 'New', 'Used'].map((tab, i) => (
                         <button
                             key={i}
-                            className={`text-white ${i === 0 ? 'border-b-2 border-white pb-1 font-medium' : 'opacity-80 hover:opacity-100'} whitespace-nowrap`}
+                            onClick={() => handleTabFilter(tab)}
+                            className={`text-white ${activeTab === tab ? 'border-b-2 border-white pb-1 font-medium' : 'opacity-80 hover:opacity-100'} whitespace-nowrap`}
                         >
                             {tab}
                         </button>
                     ))}
                 </div>
 
-                {/* Search Bar */}
+
                 <div className="w-full max-w-4xl bg-white md:rounded-full flex flex-col md:flex-row overflow-hidden shadow-lg">
                     <div className="flex flex-col md:flex-row flex-grow">
-                        {/* Makes Dropdown with ShadCN */}
+
                         <div className="flex-1 border-b md:border-b-0 md:border-r border-gray-200">
                             <CarDropdown
                                 options={makes}
@@ -185,7 +303,7 @@ export const BDXCarsHeader = () => {
                             />
                         </div>
 
-                        {/* Model Selector */}
+
                         <div className="flex-1 border-b md:border-b-0 md:border-r border-gray-200">
                             <CarDropdown
                                 options={models || []}
@@ -196,7 +314,7 @@ export const BDXCarsHeader = () => {
                             />
                         </div>
 
-                        {/* Price Selector */}
+
                         <div className="flex-1">
                             <CarDropdown
                                 options={["$0-$10,000", "$10,000-$20,000", "$20,000-$50,000", "$50,000+"]}
@@ -207,29 +325,29 @@ export const BDXCarsHeader = () => {
                         </div>
                     </div>
 
-                    {/* Search Button */}
+
                     <button
                         className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-3 flex items-center justify-center transition w-full md:w-48 text-sm sm:text-base"
                         onClick={async () => {
                             const searchSuccessful = await handleSearch();
 
                             if (searchSuccessful) {
-                                // Wait a moment to ensure DOM is fully updated
+
                                 setTimeout(() => {
-                                    // Find the explore cars element
+
                                     const exploreElement = document.getElementById('explore-cars');
 
-                                    // Debug log to verify element is found
+
                                     console.log("Found explore-cars element:", exploreElement);
 
                                     if (exploreElement) {
-                                        // Scroll to it
+
                                         exploreElement.scrollIntoView({
                                             behavior: 'smooth',
                                             block: 'start'
                                         });
                                     }
-                                }, 100); // Short delay to ensure rendering is complete
+                                }, 100);
                             }
                         }}
                         disabled={isSearching}
@@ -250,6 +368,16 @@ export const BDXCarsHeader = () => {
                     </button>
                 </div>
 
+                {/* Clear Filters Button - New Addition */}
+                {activeVehicleType && (
+                    <button
+                        className="text-white text-xs opacity-70 hover:opacity-100 mt-2 flex items-center"
+                        onClick={clearAllFilters}
+                    >
+                        Clear filters <HiX className="ml-1" />
+                    </button>
+                )}
+
                 {/* Browse Models */}
                 <div className="mt-8">
                     <p className="text-white mb-4 text-sm sm:text-base">Or Browse Featured Model</p>
@@ -259,7 +387,9 @@ export const BDXCarsHeader = () => {
                             return (
                                 <button
                                     key={model}
-                                    className="bg-gray-800 bg-opacity-70 text-white md:rounded-full px-4 sm:px-6 py-2 flex items-center text-xs sm:text-sm hover:bg-opacity-90 transition"
+                                    onClick={() => handleVehicleTypeFilter(model)}
+                                    className={`bg-gray-800 bg-opacity-70 text-white md:rounded-full px-4 sm:px-6 py-2 flex items-center text-xs sm:text-sm hover:bg-opacity-90 transition
+                                        ${activeVehicleType === model ? 'ring-2 ring-white' : ''}`}
                                 >
                                     <Icon className="mr-1 sm:mr-2" /> {model}
                                 </button>
@@ -268,6 +398,17 @@ export const BDXCarsHeader = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Add SigninModal component */}
+            <SigninModal
+                isOpen={isSigninModalOpen}
+                onClose={() => setIsSigninModalOpen(false)}
+                onSignupClick={() => {
+                    setIsSigninModalOpen(false);
+                    // If you have a signup modal:
+                    // setIsSignupModalOpen(true);
+                }}
+            />
         </div>
     );
 };

@@ -22,7 +22,7 @@ const Premiumbrands = () => {
                 </a>
             </div>
 
-            {/* Brand logos grid */}
+
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
                 {carBrands.map((brand, index) => (
                     <div key={index} className="bg-white rounded-lg border border-gray-100 shadow-sm p-6 flex flex-col items-center justify-center hover:shadow-md transition-shadow">

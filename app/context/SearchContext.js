@@ -12,7 +12,6 @@ export function SearchProvider({ children }) {
     const value = {
         searchResults,
         setSearchResults,
-
         hasSearched,
         setHasSearched
     };
