@@ -26,7 +26,7 @@ export async function searchVehicles(make, model, priceRange, condition = '', ve
         }
 
         // Build the query URL
-        let url = `https://back-end-edj4.onrender.com/api/v1/vehicle?make=${make}&model=${model}&minPrice=${minPrice}&maxPrice=${maxPrice}`;
+        let url = `${process.env.API_URL}/api/v1/vehicle?make=${make}&model=${model}&minPrice=${minPrice}&maxPrice=${maxPrice}`;
 
         // Add condition if specified
         if (condition) {

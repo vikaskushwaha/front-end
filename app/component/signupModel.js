@@ -10,12 +10,11 @@ const SignupModal = ({ isOpen, onClose, initialEmail = '' }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [formError, setFormError] = useState('');
     const modalRef = useRef(null);
-    const { signup } = useAuth();
+    const { signup, error, setUpdater } = useAuth();
     // Set email when the initialEmail prop changes
     useEffect(() => {
         setEmail(initialEmail);
     }, [initialEmail]);
-
     const handleOutsideClick = (e) => {
         if (modalRef.current && !modalRef.current.contains(e.target)) {
             onClose();
@@ -46,19 +45,30 @@ const SignupModal = ({ isOpen, onClose, initialEmail = '' }) => {
             return;
         }
 
-        // Handle form submission here (e.g., API call)
-        const response = await signup(name, email, password)
-        console.log(response);
+        try {
+            // Handle form submission here (e.g., API call)
+            const response = await signup(name, email, password);
 
-        // Show success and close modal after delay
-        setFormError('Account created successfully!');
-        setTimeout(() => {
-            onClose();
+            // Check if signup was successful
+            if (response && response.success) {
+                setFormError('Account created successfully!');
+                setTimeout(() => {
+                    onClose();
+                    setName('');
+                    setPassword('');
+                    setConfirmPassword('');
+                    setFormError('');
 
-            setName('');
-            setPassword('');
-            setConfirmPassword('');
-        }, 2000);
+
+                }, 2000);
+            } else {
+                // Handle signup response errors
+                setFormError(response?.error || 'Failed to create account');
+            }
+        } catch (err) {
+            console.error('Signup error:', err);
+            setFormError(err.response?.data?.message || 'Failed to create account');
+        }
     };
 
     if (!isOpen) return null;
@@ -151,11 +161,8 @@ const SignupModal = ({ isOpen, onClose, initialEmail = '' }) => {
                             Create Account
                         </button>
                     </div>
-
-                    <p className="text-center text-sm text-gray-500 mt-4">
-                        Already have an account? <a href="#" className="text-indigo-600 hover:text-indigo-800">Sign in</a>
-                    </p>
                 </form>
+
             </div>
         </div>
     );

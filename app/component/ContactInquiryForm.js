@@ -73,7 +73,7 @@ const ContactInquiryModal = ({ isOpen, onClose, vehicleId = null, vehicleName = 
 
         try {
             const response = await axios.post(
-                `https://back-end-edj4.onrender.com/api/v1/inqury`,
+                `${process.env.NEXT_PUBLIC_API_URL}/api/v1/inqury`,
                 inquiryData,
                 { withCredentials: true }
             );

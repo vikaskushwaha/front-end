@@ -37,19 +37,23 @@ export const AuthProvider = ({ children }) => {
         setError('');
 
         try {
-            const response = await axios.post(`https://back-end-edj4.onrender.com/api/v1/signup`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/signup`, {
                 firstName,
                 email,
                 password
             }, { withCredentials: true });
 
             const userData = response.data;
-            setUser(userData);
-            // Only try to use localStorage on client side
-            if (typeof window !== 'undefined') {
-                localStorage.setItem('user', JSON.stringify(userData));
-            }
 
+
+            if (userData.success) {
+                setUser(userData);
+
+                // Only try to use localStorage on client side
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem('user', JSON.stringify(userData));
+                }
+            }
             setLoading(false);
             return { success: true, data: userData };
         } catch (error) {
@@ -77,19 +81,21 @@ export const AuthProvider = ({ children }) => {
         console.log(email, password);
 
         try {
-            const response = await axios.post(`https://back-end-edj4.onrender.com/api/v1/login`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/login`, {
                 email,
                 password
             }, { withCredentials: true });
 
             const userData = response.data;
-            setUser(userData);
+            console.log(userData);
+            if (userData.success) {
+                setUser(userData);
 
-            // Store user data in localStorage (client-side only)
-            if (typeof window !== 'undefined') {
-                localStorage.setItem('user', JSON.stringify(userData));
+                // Store user data in localStorage (client-side only)
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem('user', JSON.stringify(userData));
+                }
             }
-
             setLoading(false);
             setUpdater(Date.now()); // Trigger UI update
             return { success: true, data: userData };
@@ -112,7 +118,8 @@ export const AuthProvider = ({ children }) => {
         signup,
         login,
         logout,
-        isAuthenticated: !!user
+        isAuthenticated: !!user,
+        setUpdater
     };
 
     return (

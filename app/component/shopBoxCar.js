@@ -46,7 +46,7 @@ const ShopBoxCar = () => {
     const fetchBrands = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`https://back-end-edj4.onrender.com/api/v1/vehicle`);
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/vehicle`);
             if (response.data?.data) {
                 if (response.data.data.vehclesList) {
                     // Extract unique makes from vehicles list
@@ -76,7 +76,7 @@ const ShopBoxCar = () => {
         setLoading(true);
         try {
             try {
-                const response = await axios.get(`https://back-end-edj4.onrender.com/api/v1/vehicle?condition=${condition}`);
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/vehicle?condition=${condition}`);
                 if (response.data?.data) {
                     if (response.data.data.vehclesList) {
                         // Extract unique makes from vehicles with this condition
@@ -102,7 +102,7 @@ const ShopBoxCar = () => {
             }
 
             // Fallback approach
-            const response = await axios.get(`https://back-end-edj4.onrender.com/api/v1/vehicle?condition=${condition}`);
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/vehicle?condition=${condition}`);
             if (response.data?.data?.vehclesList) {
                 const vehicles = response.data.data.vehclesList;
                 const uniqueBrands = [...new Set(vehicles.map(vehicle => vehicle.make))].filter(Boolean);
@@ -125,7 +125,7 @@ const ShopBoxCar = () => {
 
         for (const brand of brandsList) {
             try {
-                const response = await axios.get(`https://back-end-edj4.onrender.com/api/v1/vehicle?condition=${condition}&make=${encodeURIComponent(brand)}`);
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/vehicle?condition=${condition}&make=${encodeURIComponent(brand)}`);
 
                 // Only include brand if it has at least one car
                 if (response.data?.data?.vehclesList && response.data.data.vehclesList.length > 0) {
@@ -145,7 +145,7 @@ const ShopBoxCar = () => {
         try {
             // Try to get vehicle types from a specific endpoint if available
             try {
-                const response = await axios.get(`https://back-end-edj4.onrender.com/api/v1/vehicleTypes`);
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/vehicleTypes`);
                 if (response.data?.data) {
                     setTypes(response.data.data);
                     setLoading(false);
@@ -156,7 +156,7 @@ const ShopBoxCar = () => {
             }
 
             // If no specific endpoint exists, fetch all vehicles and extract unique types
-            const response = await axios.get(`https://back-end-edj4.onrender.com/api/v1/vehicle`);
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/vehicle`);
             if (response.data?.data?.vehclesList) {
                 const vehicles = response.data.data.vehclesList;
                 // Extract unique vehicle types
@@ -200,7 +200,7 @@ const ShopBoxCar = () => {
                     break;
             }
 
-            const response = await axios.get(`https://back-end-edj4.onrender.com/api/v1/vehicle?${queryParams}`);
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/vehicle?${queryParams}`);
 
             if (response.data?.data?.vehclesList) {
                 setCars(response.data.data.vehclesList);

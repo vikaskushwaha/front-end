@@ -11,7 +11,7 @@ const SigninModal = ({ isOpen, onClose, onSignupClick }) => {
     const modalRef = useRef(null);
 
     // Get login function from auth context
-    const { login, loading } = useAuth();
+    const { login, loading, error } = useAuth();
 
     const handleOutsideClick = (e) => {
         if (modalRef.current && !modalRef.current.contains(e.target)) {
@@ -39,6 +39,10 @@ const SigninModal = ({ isOpen, onClose, onSignupClick }) => {
             const response = await login(email, password);
 
             if (!response.success) {
+                console.log(response)
+                if (response.status === 401) {
+                    setFormError("Not Registerd Please Signup");
+                }
                 setFormError(response.error || 'Login failed. Please check your credentials.');
                 return;
             }

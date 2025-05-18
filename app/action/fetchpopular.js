@@ -6,7 +6,7 @@ import axios from 'axios';
 export async function fetchVehiclesByBrand(brand) {
     try {
         // You can use environment variables for the API URL
-        const response = await axios.get(`https://back-end-edj4.onrender.com/api/v1/vehicle?make=${brand}`);
+        const response = await axios.get(`${process.env.API_URL}/api/v1/vehicle?make=${brand}`);
 
         // Check if the response has the expected structure
         if (response.data &&
