@@ -153,7 +153,7 @@ const ContactInquiryModal = ({ isOpen, onClose, vehicleId = null, vehicleName = 
                                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-black"
                                     placeholder="Your name"
                                     required
-                                    disabled={isAuthenticated}
+
                                 />
                             </div>
 
@@ -168,7 +168,7 @@ const ContactInquiryModal = ({ isOpen, onClose, vehicleId = null, vehicleName = 
                                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-black"
                                     placeholder="your.email@example.com"
                                     required
-                                    disabled={isAuthenticated}
+
                                 />
                             </div>
                         </div>
