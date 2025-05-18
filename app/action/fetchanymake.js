@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export async function fetchCarMakes() {
     try {
-        const response = await axios.get('http://localhost:8080/api/v1/menufactures');
+        const response = await axios.get(`https://back-end-edj4.onrender.com/api/v1/menufactures`);
         if (response.data?.data) {
             return response.data.data;
         }

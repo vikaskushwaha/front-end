@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
         setError('');
 
         try {
-            const response = await axios.post('http://localhost:8080/api/v1/signup', {
+            const response = await axios.post(`https://back-end-edj4.onrender.com/api/v1/signup`, {
                 firstName,
                 email,
                 password
@@ -77,7 +77,7 @@ export const AuthProvider = ({ children }) => {
         console.log(email, password);
 
         try {
-            const response = await axios.post('http://localhost:8080/api/v1/login', {
+            const response = await axios.post(`https://back-end-edj4.onrender.com/api/v1/login`, {
                 email,
                 password
             }, { withCredentials: true });
@@ -110,7 +110,7 @@ export const AuthProvider = ({ children }) => {
         loading,
         error,
         signup,
-        login, // Add login to the context
+        login,
         logout,
         isAuthenticated: !!user
     };

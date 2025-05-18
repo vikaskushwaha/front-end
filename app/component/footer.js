@@ -20,6 +20,7 @@ const Footer = () => {
         setIsContactModalOpen(true);
     };
 
+
     return (
         <footer className="bg-[#0A0F1F] text-white py-16 px-6 rounded-2xl">
             <div className="container mx-auto max-w-7xl">
@@ -50,7 +51,7 @@ const Footer = () => {
                     ) : (
                         // Show welcome message for logged in users
                         <div className="mt-6 md:mt-0 text-right">
-                            <p className="text-indigo-400 font-medium">Welcome, {user.name || 'Member'}!</p>
+                            <p className="text-indigo-400 font-medium">Welcome, {user.user.firstName || 'Member'}!</p>
                             <p className="text-gray-400 text-sm mt-1">You're receiving our latest updates</p>
                         </div>
                     )}

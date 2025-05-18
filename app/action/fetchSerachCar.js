@@ -24,8 +24,9 @@ export async function searchVehicles(make, model, priceRange, condition = '', ve
                 console.warn(`Unrecognized price range format: ${priceRange}`);
             }
         }
+
         // Build the query URL
-        let url = `http://localhost:8080/api/v1/vehicle?make=${make}&model=${model}&minPrice=${minPrice}&maxPrice=${maxPrice}`;
+        let url = `https://back-end-edj4.onrender.com/api/v1/vehicle?make=${make}&model=${model}&minPrice=${minPrice}&maxPrice=${maxPrice}`;
 
         // Add condition if specified
         if (condition) {
