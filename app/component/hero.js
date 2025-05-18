@@ -12,7 +12,7 @@ import { fetchCarMakes } from '../action/fetchanymake';
 import { fetchCarModels } from '../action/fetchmodelForSelectedMake';
 import { searchVehicles } from '../action/fetchSerachCar';
 
-
+import { useSearch } from '../context/SearchContext';
 export const BDXCarsHeader = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [makes, setMakes] = useState([]);
@@ -21,9 +21,11 @@ export const BDXCarsHeader = () => {
     const [selectedModel, setSelectedModel] = useState('');
     const [selectedPrice, setSelectedPrice] = useState('');
     const [isSearching, setIsSearching] = useState(false);
-    const [searchResults, setSearchResults] = useState([]);
+    // const [searchResults, setSearchResults] = useState([]);
     const [searchError, setSearchError] = useState(null);
-
+    const {
+        setSearchResults,
+    } = useSearch();
     useEffect(() => {
         const getMakes = async () => {
             const makesData = await fetchCarMakes();
@@ -52,17 +54,16 @@ export const BDXCarsHeader = () => {
         setIsSearching(true);
 
         try {
-            // Allow searching even with partial criteria (not requiring all fields)
+
             if (!selectedMake && !selectedModel && !selectedPrice) {
-                // No criteria selected - show a message or search all
                 console.log("Please select at least one search criteria");
                 setSearchError("Please select at least one search criteria");
-                return;
+                return false; // Return false to indicate search didn't proceed
             }
 
             console.log(`Searching for: Make: ${selectedMake || 'Any'}, Model: ${selectedModel || 'Any'}, Price: ${selectedPrice || 'Any'}`);
 
-            // Call the search API with the selected criteria
+
             const results = await searchVehicles(
                 selectedMake || '',
                 selectedModel || '',
@@ -75,25 +76,22 @@ export const BDXCarsHeader = () => {
 
             setSearchResults(results);
 
-            // Check if we got results
+
+
             if (results.length === 0) {
                 console.log("No vehicles found matching your criteria");
                 setSearchError("No vehicles found matching your criteria");
+                return false;
             } else {
                 console.log(`Found ${results.length} vehicles matching your criteria`);
 
-                // You could navigate to a results page
-                // router.push('/search-results');
 
-                // Or store results in global state/context for use in other components
-                // searchContext.setResults(results);
-
-                // For now, let's just log the first few results
-                console.log("First few results:", results.slice(0, 3));
+                return true;
             }
         } catch (error) {
             console.error("Search failed:", error);
             setSearchError(error.message || "Something went wrong with the search");
+            return false;
         } finally {
             setIsSearching(false);
         }
@@ -210,9 +208,45 @@ export const BDXCarsHeader = () => {
                     </div>
 
                     {/* Search Button */}
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-3 flex items-center justify-center transition w-full md:w-48 text-sm sm:text-base "
-                        onClick={handleSearch}>
-                        <FaSearch className="mr-2" /> Search Cars
+                    <button
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-3 flex items-center justify-center transition w-full md:w-48 text-sm sm:text-base"
+                        onClick={async () => {
+                            const searchSuccessful = await handleSearch();
+
+                            if (searchSuccessful) {
+                                // Wait a moment to ensure DOM is fully updated
+                                setTimeout(() => {
+                                    // Find the explore cars element
+                                    const exploreElement = document.getElementById('explore-cars');
+
+                                    // Debug log to verify element is found
+                                    console.log("Found explore-cars element:", exploreElement);
+
+                                    if (exploreElement) {
+                                        // Scroll to it
+                                        exploreElement.scrollIntoView({
+                                            behavior: 'smooth',
+                                            block: 'start'
+                                        });
+                                    }
+                                }, 100); // Short delay to ensure rendering is complete
+                            }
+                        }}
+                        disabled={isSearching}
+                    >
+                        {isSearching ? (
+                            <div className="flex items-center">
+                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Searching...
+                            </div>
+                        ) : (
+                            <>
+                                <FaSearch className="mr-2" /> Search Cars
+                            </>
+                        )}
                     </button>
                 </div>
 
