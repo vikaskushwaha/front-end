@@ -27,7 +27,22 @@ To learn more about Next.js, take a look at the following resources:
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedbHere’s a simple example of how you might set up a .env file for your front-end project to store an API URL:
+
+.env
+```
+NEXT_PUBLIC_API_URL=https://back-end-edj4.onrender.com
+API_URL=https://back-end-edj4.onrender.com
+for local backend
+NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1/
+API_URL=http://localhost:8080/api/v1/
+
+```
+
+Replace https://your-api-url.com with your actual API endpoint.  
+If you’re using a framework like Create React App, make sure to prefix your environment variable with REACT_APP_ so it will be available in your JavaScript code.
+
+Let me know if you need variables for anything else!ack and contributions are welcome!
 
 ## Deploy on Vercel
 
