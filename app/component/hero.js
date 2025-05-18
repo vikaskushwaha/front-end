@@ -14,6 +14,7 @@ import { searchVehicles } from '../action/fetchSerachCar';
 import { useAuth } from '../context/authContext';
 import { useSearch } from '../context/SearchContext';
 import SigninModal from './signinModal';
+import ContactInquiryModal from './ContactInquiryForm';
 
 export const BDXCarsHeader = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -24,6 +25,7 @@ export const BDXCarsHeader = () => {
     const [selectedPrice, setSelectedPrice] = useState('');
     const [isSearching, setIsSearching] = useState(false);
     const [isSigninModalOpen, setIsSigninModalOpen] = useState(false);
+    const [isContactModalOpen, setIsContactModalOpen] = useState(false);
     const { user, logout } = useAuth();
     // const [searchResults, setSearchResults] = useState([]);
     const [searchError, setSearchError] = useState(null);
@@ -220,7 +222,14 @@ export const BDXCarsHeader = () => {
                             </div>
                         ))}
                         <div className="cursor-pointer hover:text-gray-200 transition">About</div>
-                        <div className="cursor-pointer hover:text-gray-200 transition">Contact</div>
+
+                        {/* Add onClick handler to Contact button */}
+                        <div
+                            onClick={() => setIsContactModalOpen(true)}
+                            className="cursor-pointer hover:text-gray-200 transition"
+                        >
+                            Contact
+                        </div>
                     </div>
                     <div className="hidden sm:flex items-center space-x-4">
                         {user ? (
@@ -251,19 +260,22 @@ export const BDXCarsHeader = () => {
                 {mobileMenuOpen && (
                     <div className="lg:hidden mt-4 bg-gray-900 bg-opacity-90 p-4 absolute left-0 right-0 z-50">
                         <div className="flex flex-col space-y-3 text-white">
-                            {['Home', 'Listings', 'Blog', 'Pages', 'About', 'Contact'].map((item, index) => (
+                            {['Home', 'Listings', 'Blog', 'Pages', 'About'].map((item, index) => (
                                 <div key={index} className="flex items-center justify-between cursor-pointer py-2 border-b border-gray-700">
                                     {item} {index < 4 && <IoIosArrowDown className="ml-1" />}
                                 </div>
                             ))}
-                            <div className="sm:hidden flex items-center justify-between py-2">
-                                <button className="text-white flex items-center">
-                                    <BsFillPersonFill className="mr-1" /> Sign in
-                                </button>
-                                <button className="bg-white text-gray-800 px-3 py-1.5 rounded-full text-sm font-medium">
-                                    Submit Listing
-                                </button>
+                            <div
+                                className="flex items-center justify-between cursor-pointer py-2 border-b border-gray-700"
+                                onClick={() => {
+                                    setMobileMenuOpen(false);
+                                    setIsContactModalOpen(true);
+                                }}
+                            >
+                                Contact
                             </div>
+
+                            {/* Rest of mobile menu */}
                         </div>
                     </div>
                 )}
@@ -408,6 +420,12 @@ export const BDXCarsHeader = () => {
                     // If you have a signup modal:
                     // setIsSignupModalOpen(true);
                 }}
+            />
+
+            {/* Add ContactInquiryModal component */}
+            <ContactInquiryModal
+                isOpen={isContactModalOpen}
+                onClose={() => setIsContactModalOpen(false)}
             />
         </div>
     );
