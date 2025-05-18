@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }) => {
         if (typeof window !== 'undefined') {
             localStorage.removeItem('user');
         }
-        const data = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/logout`)
+        const data = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/logout`, {}, { withCredentials: true })
         setUpdater(Date.now());
     }, []);
 
