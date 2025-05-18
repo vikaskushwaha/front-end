@@ -67,11 +67,12 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
 
-    const logout = useCallback(() => {
+    const logout = useCallback(async () => {
         setUser(null);
         if (typeof window !== 'undefined') {
             localStorage.removeItem('user');
         }
+        const data = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/logout`)
         setUpdater(Date.now());
     }, []);
 
